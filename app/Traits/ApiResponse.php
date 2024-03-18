@@ -11,14 +11,17 @@ trait ApiResponse
 				$response['data'] = $data;
 			}
 			break;
-			case 'error':
+			case 'error': {
 				$response['errors'] = $errors;
+			}
 			break;
-			case 'exception':
+			case 'exception': {
 				$response['exceptions'] = $exceptions;
+			}
 			break;
-			default:
+			default: {
 				$response['data'] = [];
+			}
 		}
 		return response()->json($response,$statusCode);
 	}
