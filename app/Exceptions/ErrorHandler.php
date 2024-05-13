@@ -23,6 +23,18 @@ class ErrorHandler extends Exception
     public static $errorResponse; 
 
     /*
+        To Store the exception response and return it while rendering the exceptions
+    */
+    public static $responseData; 
+
+    /*
+    **
+    * To Override the exception when an non error exception is thrown for example validation exception.
+    */
+    public static $nonErrorExceptions;
+
+
+    /*
         Application Level ERROR_CODES for default exceptions 
     */
     const ERROR_CODES = 
@@ -34,7 +46,8 @@ class ErrorHandler extends Exception
         'InvalidArgumentException' => "INVALID_ARGUMENT_EXCEPTION",
         'QueryException' => "QUERY_EXCEPTION",
         'BadMethodCallException' => "BAD_METHOD_CALL_EXCEPTION",
-        "NotFoundHttpException" => "REQUESTED_RESOURCE_NOT_FOUND"
+        "NotFoundHttpException" => "REQUESTED_RESOURCE_NOT_FOUND",
+        "AccessDeniedHttpException" => "ACCESS_DENIED"
     ];
 
     /**
@@ -44,11 +57,14 @@ class ErrorHandler extends Exception
      * @param  Throwable $exception
      * @return array
      */
-    public function throwAPIErrorResponse(Response $response,Throwable $exception)
+    public function throwAPIErrorResponse(Throwable $exception)
     {
-        $this->response = $response;
         $this->exception = $exception;
-        return $this->sendResponse(status:'error',message:$this->exception->getMessage(),errorResponseCode:$this->getAPIErrorCode());
+
+        if (is_null(self::$nonErrorExceptions)) {
+
+            self::$responseData = ($this->sendResponse(status:'error',message:$this->exception->getMessage(),errorResponseCode:$this->getAPIErrorCode()));
+        }
     }
     
     /**
@@ -72,7 +88,21 @@ class ErrorHandler extends Exception
         
        return self::ERROR_CODES[$exceptionType];
     }
+    
+    /**
+     * Created method to render the API Error response 
+     *
+     * @return json
+     */
+    public function APIError()
+    {
+        if(! is_null(self::$responseData))
+        {
+            return self::$responseData;
+        }
 
+        return self::$nonErrorExceptions;
+    }
 
 
 }

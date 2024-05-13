@@ -16,7 +16,6 @@ class DivideByZeroException extends ErrorHandler
         $this->message = $message;
         self::$errorResponse = "CANNOT_DIVIDE_BY_ZERO";
 
-        // parent::__construct();
     }
 
 }

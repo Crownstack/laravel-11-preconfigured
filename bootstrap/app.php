@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         commands: __DIR__ . '/../routes/console.php',
@@ -27,13 +28,21 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        
+
+
         if (request()->is('api/*') && env('API_ERROR_REPORTING') == false) {
-            
-            $exceptions->respond(function (Response $response,Throwable $exception )
+
+            $exceptions->report(function (Throwable $exception) {
+                return (new ErrorHandler)->throwAPIErrorResponse($exception);               
+            });
+
+            $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e)
             {
-                return ( new ErrorHandler )->throwAPIErrorResponse($response,$exception);
- 
+                return false;
+            });
+
+            $exceptions->respond(function (Response $response) {
+                return (new ErrorHandler)->APIError();
             });
         }
 
