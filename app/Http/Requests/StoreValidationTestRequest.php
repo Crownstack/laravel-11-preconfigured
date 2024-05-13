@@ -23,7 +23,7 @@ class StoreValidationTestRequest extends BaseAPIValidator
     {
         return [
             'name' => 'required',
-            'email' => 'email|required'
+            'email' => 'email|min:5|required'
         ];
     }
 }
