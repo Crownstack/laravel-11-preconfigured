@@ -219,29 +219,29 @@ noOfWorker=1
 
 # Creating a Supervisor configuration file for Laravel queue worker
 
-# touch $PWD/storage/logs/$supervisorName-worker.log 
+touch $PWD/storage/logs/$supervisorName-worker.log 
 
-# cat <<EOF | sudo tee /etc/supervisor/conf.d/$supervisorName-worker.conf > /dev/null
-# [program:$supervisorName-worker]
-# process_name=%(program_name)s_%(process_num)02d
-# command=php $PWD/artisan queue:work --queue=$queueName --tries=3
-# autostart=true
-# autorestart=true
-# user=$(whoami)
-# numprocs=$noOfWorker
-# redirect_stderr=true
-# stdout_logfile=$PWD/storage/logs/$supervisorName-worker.log
-# EOF
+cat <<EOF | sudo tee /etc/supervisor/conf.d/$supervisorName-worker.conf > /dev/null
+[program:$supervisorName-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php $PWD/artisan queue:work --queue=$queueName --tries=3
+autostart=true
+autorestart=true
+user=$(whoami)
+numprocs=$noOfWorker
+redirect_stderr=true
+stdout_logfile=$PWD/storage/logs/$supervisorName-worker.log
+EOF
 
-# sudo sed -i "s|$PWD/|$(pwd)/|g" /etc/supervisor/conf.d/$supervisorName-worker.conf
-# sudo sed -i "s|$(whoami)|$(whoami)|g" /etc/supervisor/conf.d/$supervisorName-worker.conf
+sudo sed -i "s|$PWD/|$(pwd)/|g" /etc/supervisor/conf.d/$supervisorName-worker.conf
+sudo sed -i "s|$(whoami)|$(whoami)|g" /etc/supervisor/conf.d/$supervisorName-worker.conf
 
-# # Update Supervisor to read the new configuration
-# sudo supervisorctl reread
-# sudo supervisorctl update
+# Update Supervisor to read the new configuration
+sudo supervisorctl reread
+sudo supervisorctl update
 
-# # Start the Laravel worker
-# sudo supervisorctl start $supervisorName-worker:*
+# Start the Laravel worker
+sudo supervisorctl start $supervisorName-worker:*
 
 # Git hooks 
 
@@ -269,3 +269,30 @@ if [ ! -f "$hooks_dir/$hook_file" ]; then
 else
     echo "$hook_file hook already exists."
 fi
+
+# Import database dump file
+
+askForUserInput "Press 1 to import database dump and 0 to skip this step (0/1) :" dbDump
+
+case $dbDump in 
+    1)
+        askForUserInput "Please write the filename stored in $PWD : " dumpFile 
+        databaseName=$(grep "DB_DATABASE" .env | cut -d'=' -f2)
+        userName=$(grep "DB_USERNAME" .env | cut -d'=' -f2)
+        password=$(grep "DB_PASSWORD" .env | cut -d'=' -f2)
+
+        mysql -u "$username" -p"$password" -e "CREATE DATABASE IF NOT EXISTS $databaseName;"
+
+        mysql -u "$username" -p"$password" "$databaseName" < "$dumpFile"
+        
+        printMessage "Database Imported successfully!" $successColor
+
+        ;;
+    0)
+            printMessage "Database Import skipped" $successColor
+
+        ;;
+    *)
+        printMessage "Invalid Option selected" $errorColor
+    ;;
+esac
