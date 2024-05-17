@@ -296,3 +296,5 @@ case $dbDump in
         printMessage "Invalid Option selected" $errorColor
     ;;
 esac
+
+#Comment added to test git hook
