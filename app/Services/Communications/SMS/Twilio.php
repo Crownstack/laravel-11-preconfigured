@@ -90,7 +90,7 @@ class Twilio extends BaseSMSChannel
             return $this->returnData('ok', 'sms_sending_in_process');
         }
 
-        SMSSenderJob::dispatch($to,$message,$this);
+        SMSSenderJob::dispatch($to,$message,$this)->onQueue('sms');
         return $this->returnData('ok', 'sms_sending_in_process');
 
     }
