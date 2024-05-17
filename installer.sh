@@ -297,4 +297,3 @@ case $dbDump in
     ;;
 esac
 
-#Comment added to test git hook
