@@ -46,8 +46,14 @@ class SMTP  extends BaseMailable
      * 
      * @return array $response
      */
-    public function sendEmail()
+    public function sendEmail($async = false)
     {
+        if($async)
+        {
+            $this->sendAsyncEmail();
+            return $this->returnData('ok', 'email_sent_successfully');
+        }
+        
         return $this->triggerEmail();
     }
 
@@ -59,7 +65,10 @@ class SMTP  extends BaseMailable
      */
     public function sendAsyncEmail()
     {
-        // EmailSenderJob::dispatch($receivers, $message);
+        $data = $this->data;
+        $message = $this->build();
+
+        EmailSenderJob::dispatch($data, $message);
     }
 
     
