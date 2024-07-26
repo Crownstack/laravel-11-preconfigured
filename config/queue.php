@@ -43,6 +43,15 @@ return [
             'after_commit' => false,
         ],
 
+        'sms' => [
+            'driver' => 'database',
+            'connection' => env('DB_QUEUE_CONNECTION', null),
+            'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'queue' => 'sms',
+            'retry_after' => env('DB_QUEUE_RETRY_AFTER', 90),
+            'after_commit' => false,
+        ],
+
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => env('BEANSTALKD_QUEUE_HOST', 'localhost'),

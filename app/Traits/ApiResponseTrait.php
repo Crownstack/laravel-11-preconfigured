@@ -34,4 +34,10 @@ trait ApiResponseTrait
 		
 		return response()->json($response, $statusCode);
 	}
+
+	public function sendApiResponse($modelResponse)
+	{
+	
+		return $this->sendResponse(status:$modelResponse['responseType'],message:$modelResponse['responseCode'],data:$modelResponse['data']);
+	}
 }
