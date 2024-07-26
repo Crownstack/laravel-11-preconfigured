@@ -2,9 +2,25 @@
 
 Make sure to have the following software installed before installing Laravel:
 
-1. PHP 8.3 and all the required PHP packages (`sudo apt install curl zip unzip php8.3 php8.3-fpm php8.3-mysql php8.3-cli php8.3-mbstring php8.3-zip php8.3-xml php8.3-curl php8.3-dom php8.3-gd`)
-2. Composer 2 (`curl -sS https://getcomposer.org/installer -o composer-setup.php && sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer && rm composer-setup.php`)
-3. Nginx (`sudo apt install nginx`)
+## PHP 8.3 and all the required PHP packages
+
+```
+sudo apt install curl zip unzip php8.3 php8.3-fpm php8.3-mysql php8.3-cli php8.3-mbstring php8.3-zip php8.3-xml php8.3-curl php8.3-dom php8.3-gd
+```
+
+## Composer 2
+
+```
+curl -sS https://getcomposer.org/installer -o composer-setup.php
+sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+rm composer-setup.php
+```
+
+## Nginx
+
+```
+sudo apt install nginx
+```
 
 # Laravel Project Installation
 
