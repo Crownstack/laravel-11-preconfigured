@@ -29,21 +29,22 @@ sudo apt install nginx
 Sample NGINX virtual host configuration file:
 ```
 server {
-		listen 80;
-		root /project-root-folder/public;
-		index index.php;
-		server_name api.example.com;
+    listen 80;
+    root /project-root-folder/public;
+    index index.php;
+    server_name api.example.com;
 
-		#Control the max body size client can upload in a single HTTP request
-		client_max_body_size 999m;
+    #Control the max body size client can upload in a single HTTP request
+    client_max_body_size 999m;
 
-		location / {
-			try_files $uri $uri/ /index.php?$query_string;
-		}
-		location ~ \.php$ {
-			include snippets/fastcgi-php.conf;
-			fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
-		}
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+    }
 }
 ```
 
