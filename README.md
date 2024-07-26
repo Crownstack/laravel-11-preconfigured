@@ -22,7 +22,7 @@ rm composer-setup.php
 sudo apt install nginx
 ```
 
-# Laravel Project Installation
+# Installing the Laravel Project
 
 ## Setup Virtual Host on NGINX
 
@@ -71,4 +71,27 @@ cp .env.example .env
 
 ```
 php artisan key:generate
+```
+
+
+# Other useful commands
+
+## Caching the application configuration for faster load for production environment
+
+To give application a speed boost, you should cache all of your configuration files into a single file. This will combine all of the configuration options for your application into a single file which can be quickly loaded by the framework.
+
+### Generating config's cache
+
+```
+php artisan config:cache
+```
+
+You should typically run the above command as part of your production deployment process. The command should not be run during local development as configuration options will frequently need to be changed during the course of your application's development.
+
+[Reference reading](https://laravel.com/docs/11.x/configuration#configuration-caching)
+
+### Deleting (purging) config's cache
+
+```
+php artisan config:clear
 ```
